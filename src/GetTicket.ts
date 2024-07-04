@@ -1,15 +1,16 @@
 import pgp from 'pg-promise'
+import TicketRepository from './TicketRepository'
 
 export default class GetTicket {
+  private ticketRepository: TicketRepository = new TicketRepository()
+
   async execute(ticketId: string): Promise<Output> {
-    const connection = pgp()('postgres://postgres:postgres@localhost:5432/postgres')
-    const [ticket] = await connection.query('SELECT * FROM branas.tickets WHERE ticket_id = $1', [ticketId])
-    console.log(ticket)
+    const ticket = await this.ticketRepository.find(ticketId)
     return {
-      ticketId: ticket.ticket_id,
-      eventId: ticket.event_id,
+      ticketId: ticket.ticketId,
+      eventId: ticket.eventId,
       email: ticket.email,
-      price: parseFloat(ticket.price),
+      price: ticket.price
     }
   }
 }

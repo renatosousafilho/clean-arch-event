@@ -1,12 +1,20 @@
 import crypto from 'crypto';
-import pgp from 'pg-promise';
+import TicketRepository from './TicketRepository';
+import EventRepository from './EventRepository';
 
 export default class PurchaseTicket {
+  private ticketRepository: TicketRepository = new TicketRepository();
+  private eventRepository: EventRepository = new EventRepository();
+
   async execute(input: Input): Promise<Output> {
     const ticketId = crypto.randomUUID();
-    const connection = pgp()('postgres://postgres:postgres@localhost:5432/postgres')
-    const [event] = await connection.query('SELECT * FROM branas.events WHERE event_id = $1', [input.eventId])
-    await connection.query('INSERT INTO branas.tickets (ticket_id, event_id, email, price) VALUES ($1, $2, $3, $4)', [ticketId, input.eventId, input.email, event.price])
+    const event = await this.eventRepository.find(input.eventId)
+    await this.ticketRepository.save({
+      ticketId,
+      eventId: input.eventId,
+      email: input.email,
+      price: event.price
+    })
     return {
       ticketId,
     }
