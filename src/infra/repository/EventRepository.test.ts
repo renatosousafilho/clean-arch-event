@@ -15,6 +15,22 @@ test('EventRepositoryPostgres should find an event', async () => {
   await databaseConnection.close();
 });
 
+test('EventRepositoryPostgres should insert an event', async () => {
+  // Arrange
+  const databaseConnection = new PgPromiseAdapter();
+  const event = Event.create('Concert', 100);
+  const eventRepository = new EventRepositoryPostgres(databaseConnection);
+  // Act
+  await eventRepository.save(event);
+  // Assert
+  const [eventFound] = await databaseConnection.query('SELECT * FROM branas.events WHERE event_id = $1', [event.eventId]);
+  expect(eventFound.event_id).toBe(event.eventId);
+  expect(eventFound.description).toBe(event.description);
+  expect(parseFloat(eventFound.price)).toBe(event.price);
+  await databaseConnection.query('DELETE FROM branas.events WHERE event_id = $1', [event.eventId]);
+  await databaseConnection.close();
+});
+
 test('EventRepositoryMySQL should find an event', async () => {
   const databaseConnection = new Mysql2Adapter();
   const event = Event.create('Concert', 100);
@@ -24,6 +40,22 @@ test('EventRepositoryMySQL should find an event', async () => {
   expect(eventFound.eventId).toBe(event.eventId);
   expect(eventFound.description).toBe(event.description);
   expect(eventFound.price).toBe(event.price);
+  await databaseConnection.query('DELETE FROM branas.events WHERE event_id = ?', [event.eventId]);
+  await databaseConnection.close();
+});
+
+test('EventRepositoryMySQL should insert an event', async () => {
+  // Arrange
+  const databaseConnection = new Mysql2Adapter();
+  const event = Event.create('Concert', 100);
+  const eventRepository = new EventRepositoryMySQL(databaseConnection);
+  // Act
+  await eventRepository.save(event);
+  // Assert
+  const [[eventFound]] = await databaseConnection.query('SELECT * FROM branas.events WHERE event_id = ?', [event.eventId]);
+  expect(eventFound.event_id).toBe(event.eventId);
+  expect(eventFound.description).toBe(event.description);
+  expect(parseFloat(eventFound.price)).toBe(event.price);
   await databaseConnection.query('DELETE FROM branas.events WHERE event_id = ?', [event.eventId]);
   await databaseConnection.close();
 });
@@ -41,6 +73,14 @@ test('EventRepositoryMemory should find an ticket', async () => {
   expect(eventFound.eventId).toBe(event.eventId);
   expect(eventFound.description).toBe(event.description);
   expect(eventFound.price).toBe(event.price);
+});
+
+test('EventRepositoryMemory should throw an error when event not found', async () => {
+  // Arrange
+  const eventRepository = EventRepositoryMemory.getInstance();
+  
+  // Act
+  expect(() => eventRepository.find('invalid-event-id')).rejects.toThrow('Event not found');
 });
 
 test('EventRepositoryMemory should insert an ticket', async () => {

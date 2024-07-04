@@ -47,3 +47,13 @@ test('When createTicketRepository is called thrugh Memory, it should return an i
   const ticketRepository = repositoryFactory.createTicketRepository();
   expect(ticketRepository).toBeInstanceOf(TicketRepositoryMemory);
 })
+
+test('When createEventRepository is called with a invalid database connection, it should throw an error', async () => {
+  const repositoryFactory = new RepositoryFactoryDatabase({} as any);
+  expect(() => repositoryFactory.createEventRepository()).toThrow('Database not supported');
+})
+
+test('When createTicketRepository is called with a invalid database connection, it should throw an error', async () => {
+  const repositoryFactory = new RepositoryFactoryDatabase({} as any);
+  expect(() => repositoryFactory.createTicketRepository()).toThrow('Database not supported');
+})

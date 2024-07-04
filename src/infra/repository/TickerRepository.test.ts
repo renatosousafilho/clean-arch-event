@@ -133,3 +133,11 @@ test('TicketRepositoryMemory should insert an ticket', async () => {
   expect(ticketFound.email).toBe(ticket.email);
   expect(ticketFound.price).toBe(ticket.price);
 });
+
+test('TicketRepositoryMemory should throw an error when event not found', async () => {
+  // Arrange
+  const ticketRepository = TicketRepositoryMemory.getInstance();
+  
+  // Act
+  expect(() => ticketRepository.find('invalid-event-id')).rejects.toThrow('Ticket not found');
+});
