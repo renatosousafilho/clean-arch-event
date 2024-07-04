@@ -1,22 +1,28 @@
 import Event from '../../domain/entities/Event';
 import DatabaseConnection from '../database/DatabaseConnection';
-import DatabaseQueryGenerator from '../database/DatabaseQueryGenerator';
-import DatabaseQueryGeneratorFactory from '../database/DatabaseQueryGeneratorFactory';
 
 export default interface EventRepository {
   find(eventId: string): Promise<Event>;
 }
 
-export class EventRepositoryDatabase implements EventRepository {
-  private databaseQueryGenerator: DatabaseQueryGenerator;
+export abstract class EventRepositoryDatabase implements EventRepository {
+  constructor(protected databaseConnection: DatabaseConnection) {}
+  
+  abstract find(eventId: string): Promise<Event>;
+}
 
-  constructor(private databaseConnection: DatabaseConnection) { 
-    this.databaseQueryGenerator = DatabaseQueryGeneratorFactory.create(this.databaseConnection);
-  }
-
+export class EventRepositoryPostgres extends EventRepositoryDatabase {
   async find(eventId: string): Promise<Event> {
-    const sql = this.databaseQueryGenerator.select('branas.events', ['event_id', 'description', 'price'], ['event_id']);
+    const sql = 'SELECT * FROM branas.events WHERE event_id = $1';
     const [event] = await this.databaseConnection.query(sql, [eventId]);
+    return new Event(event.event_id, event.name, parseFloat(event.price));
+  }
+}
+
+export class EventRepositoryMySQL extends EventRepositoryDatabase {
+  async find(eventId: string): Promise<Event> {
+    const sql = 'SELECT * FROM branas.events WHERE event_id = ?';
+    const [[event]] = await this.databaseConnection.query(sql, [eventId]);
     return new Event(event.event_id, event.name, parseFloat(event.price));
   }
 }
