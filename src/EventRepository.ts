@@ -1,14 +1,14 @@
-import pgp from 'pg-promise'
 import Event from './Event';
+import DatabaseConnection from './DatabaseConnection';
 
 export default interface EventRepository {
   find(eventId: string): Promise<Event>;
 }
 
 export class EventRepositoryDatabase implements EventRepository {
+  constructor(private databaseConnection: DatabaseConnection) { }
   async find(eventId: string): Promise<Event> {
-    const connection = pgp()('postgres://postgres:postgres@localhost:5432/postgres')
-    const [event] = await connection.query('SELECT * FROM branas.events WHERE event_id = $1', [eventId])
+    const [event] = await this.databaseConnection.query('SELECT * FROM branas.events WHERE event_id = $1', [eventId])
     return new Event(event.event_id, event.name, parseFloat(event.price));
   }
 }
