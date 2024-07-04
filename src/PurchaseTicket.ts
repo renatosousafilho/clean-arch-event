@@ -8,12 +8,11 @@ export default class PurchaseTicket {
   private eventRepository: EventRepository = new EventRepository();
 
   async execute(input: Input): Promise<Output> {
-    const ticketId = crypto.randomUUID();
     const event = await this.eventRepository.find(input.eventId)
-    const ticket = new Ticket(ticketId, input.eventId, input.email, event.price)
+    const ticket = Ticket.create(event.eventId, input.email, event.price)
     await this.ticketRepository.save(ticket)
     return {
-      ticketId,
+      ticketId: ticket.ticketId
     }
   }
 }

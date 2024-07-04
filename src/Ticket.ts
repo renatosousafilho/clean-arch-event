@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 export default class Ticket {
   ticketId: string
   eventId: string
@@ -9,5 +11,10 @@ export default class Ticket {
     this.eventId = eventId
     this.email = email
     this.price = price
+  }
+
+  static create(eventId: string, email: string, price: number) {
+    const ticketId = crypto.randomUUID()
+    return new Ticket(ticketId, eventId, email, price)
   }
 }
