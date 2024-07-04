@@ -15,7 +15,7 @@ export class EventRepositoryPostgres extends EventRepositoryDatabase {
   async find(eventId: string): Promise<Event> {
     const sql = 'SELECT * FROM branas.events WHERE event_id = $1';
     const [event] = await this.databaseConnection.query(sql, [eventId]);
-    return new Event(event.event_id, event.name, parseFloat(event.price));
+    return new Event(event.event_id, event.description, parseFloat(event.price));
   }
 }
 
@@ -23,6 +23,6 @@ export class EventRepositoryMySQL extends EventRepositoryDatabase {
   async find(eventId: string): Promise<Event> {
     const sql = 'SELECT * FROM branas.events WHERE event_id = ?';
     const [[event]] = await this.databaseConnection.query(sql, [eventId]);
-    return new Event(event.event_id, event.name, parseFloat(event.price));
+    return new Event(event.event_id, event.description, parseFloat(event.price));
   }
 }

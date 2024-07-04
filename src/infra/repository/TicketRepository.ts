@@ -23,7 +23,7 @@ export class TicketRepositoryPostgres extends TicketRepositoryDatabase {
   async find(ticketId: string): Promise<Ticket> {
     const sql = 'SELECT * FROM branas.tickets WHERE ticket_id = $1';
     const [ticket] = await this.databaseConnection.query(sql, [ticketId]);
-    return new Ticket(ticket.ticket_id, ticket.event_id, ticket.email, ticket.price)
+    return new Ticket(ticket.ticket_id, ticket.event_id, ticket.email, parseFloat(ticket.price));
   }
 }
 
@@ -37,7 +37,7 @@ export class TicketRepositoryMySQL extends TicketRepositoryDatabase {
   async find(ticketId: string): Promise<Ticket> {
     const sql = 'SELECT * FROM branas.tickets WHERE ticket_id = ?';
     const [[ticket]] = await this.databaseConnection.query(sql, [ticketId]);
-    return new Ticket(ticket.ticket_id, ticket.event_id, ticket.email, ticket.price)
+    return new Ticket(ticket.ticket_id, ticket.event_id, ticket.email, parseFloat(ticket.price));
   }
 }
 
