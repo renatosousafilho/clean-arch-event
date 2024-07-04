@@ -1,10 +1,12 @@
+import RepositoryFactory from './RepositoryFactory';
 import TicketRepository from './TicketRepository'
 
 export default class GetTicket {
-  constructor(
-    private ticketRepository: TicketRepository
-  ) { }
-
+  private ticketRepository: TicketRepository;
+  constructor(repositoryFactory: RepositoryFactory) {
+    this.ticketRepository = repositoryFactory.createTicketRepository();
+  }
+    
   async execute(ticketId: string): Promise<Output> {
     const ticket = await this.ticketRepository.find(ticketId)
     return {

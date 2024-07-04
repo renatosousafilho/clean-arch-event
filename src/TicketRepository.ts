@@ -1,4 +1,3 @@
-import pgp from 'pg-promise';
 import Ticket from './Ticket';
 import DatabaseConnection from './DatabaseConnection';
 

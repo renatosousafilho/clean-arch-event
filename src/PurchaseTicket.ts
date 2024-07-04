@@ -1,12 +1,15 @@
 import TicketRepository from './TicketRepository';
 import EventRepository from './EventRepository';
+import RepositoryFactory from './RepositoryFactory';
 import Ticket from './Ticket';
 
 export default class PurchaseTicket {
-  constructor(
-    private ticketRepository: TicketRepository,
-    private eventRepository: EventRepository,
-  ) { }
+  private ticketRepository: TicketRepository;
+  private eventRepository: EventRepository;
+  constructor(repositoryFactory: RepositoryFactory) {
+    this.ticketRepository = repositoryFactory.createTicketRepository();
+    this.eventRepository = repositoryFactory.createEventRepository();
+  }
 
   async execute(input: Input): Promise<Output> {
     const event = await this.eventRepository.find(input.eventId)
