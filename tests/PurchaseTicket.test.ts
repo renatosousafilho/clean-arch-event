@@ -1,7 +1,7 @@
 import GetTicket from '../src/domain/usecase/GetTicket';
 import PurchaseTicket from '../src/domain/usecase/PurchaseTicket';
-import DatabaseConnection, { PgPromiseAdapter } from '../src/DatabaseConnection';
-import RepositoryFactory, { RepositoryFactoryDatabase } from '../src/RepositoryFactory';
+import DatabaseConnection, { PgPromiseAdapter } from '../src/infra/database/DatabaseConnection';
+import RepositoryFactory, { RepositoryFactoryDatabase } from '../src/infra/repository/RepositoryFactory';
 
 test('Deve comprar um ingresso', async () => {
   const databaseConnection: DatabaseConnection = new PgPromiseAdapter();

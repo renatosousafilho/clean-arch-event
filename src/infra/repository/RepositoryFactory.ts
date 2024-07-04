@@ -1,6 +1,6 @@
 import TicketRepository, { TicketRepositoryDatabase } from './TicketRepository';
 import EventRepository, { EventRepositoryDatabase } from './EventRepository';
-import DatabaseConnection from './DatabaseConnection';
+import DatabaseConnection from '../database/DatabaseConnection';
 
 export default interface RepositoryFactory {
   createTicketRepository(): TicketRepository

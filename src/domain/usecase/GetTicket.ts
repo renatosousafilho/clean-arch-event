@@ -1,5 +1,5 @@
-import RepositoryFactory from '../../RepositoryFactory';
-import TicketRepository from '../../TicketRepository'
+import RepositoryFactory from '../../infra/repository/RepositoryFactory';
+import TicketRepository from '../../infra/repository/TicketRepository';
 
 export default class GetTicket {
   private ticketRepository: TicketRepository;

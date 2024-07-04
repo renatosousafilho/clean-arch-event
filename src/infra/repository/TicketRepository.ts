@@ -1,5 +1,5 @@
-import Ticket from './domain/entities/Ticket';
-import DatabaseConnection from './DatabaseConnection';
+import Ticket from '../../domain/entities/Ticket';
+import DatabaseConnection from '../database/DatabaseConnection';
 
 export default interface TicketRepository {
   save(ticket: Ticket): Promise<void>;

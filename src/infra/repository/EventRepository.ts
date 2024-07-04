@@ -1,5 +1,5 @@
-import Event from './domain/entities/Event';
-import DatabaseConnection from './DatabaseConnection';
+import Event from '../../domain/entities/Event';
+import DatabaseConnection from '../database/DatabaseConnection';
 
 export default interface EventRepository {
   find(eventId: string): Promise<Event>;
