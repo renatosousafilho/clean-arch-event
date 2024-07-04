@@ -1,8 +1,8 @@
-import RepositoryFactory from './RepositoryFactory';
+import RepositoryFactory, { RepositoryFactoryMemory } from './RepositoryFactory';
 import { Mysql2Adapter, PgPromiseAdapter } from '../database/DatabaseConnection';
 import { RepositoryFactoryDatabase } from './RepositoryFactory';
-import { TicketRepositoryMySQL, TicketRepositoryPostgres } from './TicketRepository';
-import { EventRepositoryMySQL, EventRepositoryPostgres } from './EventRepository';
+import { TicketRepositoryMySQL, TicketRepositoryPostgres, TicketRepositoryMemory } from './TicketRepository';
+import { EventRepositoryMySQL, EventRepositoryPostgres, EventRepositoryMemory } from './EventRepository';
 
 test('When createTicketRepository is called with Postgres, it should return an instance of TicketRepositoryPostgres', async () => {
   const databaseConnection = new PgPromiseAdapter();
@@ -35,3 +35,15 @@ test('When createEventRepository is called with Postgres, it should return an in
   expect(eventRepository).toBeInstanceOf(EventRepositoryMySQL);
   await databaseConnection.close();
 });
+
+test('When createEventRepository is called thrugh Memory, it should return an instance of EventRepositoryMemory', async () => {
+  const repositoryFactory = new RepositoryFactoryMemory();
+  const eventRepository = repositoryFactory.createEventRepository();
+  expect(eventRepository).toBeInstanceOf(EventRepositoryMemory);
+});
+
+test('When createTicketRepository is called thrugh Memory, it should return an instance of TicketRepositoryMemory', async () => {
+  const repositoryFactory = new RepositoryFactoryMemory();
+  const ticketRepository = repositoryFactory.createTicketRepository();
+  expect(ticketRepository).toBeInstanceOf(TicketRepositoryMemory);
+})

@@ -1,7 +1,7 @@
 import { Mysql2Adapter, PgPromiseAdapter } from '../database/DatabaseConnection';
 import Event from '../../domain/entities/Event';
 import EventRepository, { EventRepositoryMySQL, EventRepositoryPostgres } from './EventRepository';
-import TicketRepository, { TicketRepositoryMySQL, TicketRepositoryPostgres } from './TicketRepository';
+import TicketRepository, { TicketRepositoryMemory, TicketRepositoryMySQL, TicketRepositoryPostgres } from './TicketRepository';
 import Ticket from '../../domain/entities/Ticket';
 
 test('TickerRepositoryPostgres should insert an ticket', async () => {
@@ -98,4 +98,38 @@ test('TickerRepositoryMySQL should find an ticket', async () => {
   await databaseConnection.query('DELETE FROM branas.tickets WHERE ticket_id = ?', [ticket.ticketId]);
   await databaseConnection.query('DELETE FROM branas.events WHERE event_id = ?', [event.eventId]);
   await databaseConnection.close();
+});
+
+test('TicketRepositoryMemory should find an ticket', async () => {
+  // Arrange
+  const ticketRepository = TicketRepositoryMemory.getInstance();
+  const event = Event.create('Concert', 100);
+  const ticket = Ticket.create(event.eventId, 'l5bZ6@example.com', event.price);
+  await ticketRepository.save(ticket);
+  
+  // Act
+  const ticketFound = await ticketRepository.find(ticket.ticketId);
+
+  // Assert
+  expect(ticketFound.ticketId).toBe(ticket.ticketId);
+  expect(ticketFound.eventId).toBe(ticket.eventId);
+  expect(ticketFound.email).toBe(ticket.email);
+  expect(ticketFound.price).toBe(ticket.price);
+});
+
+test('TicketRepositoryMemory should insert an ticket', async () => {
+  // Arrange
+  const ticketRepository = TicketRepositoryMemory.getInstance();
+  const event = Event.create('Concert', 100);
+  const ticket = Ticket.create(event.eventId, 'l5bZ6@example.com', event.price);
+  
+  // Act
+  await ticketRepository.save(ticket);
+  
+  // Assert
+  const ticketFound = await ticketRepository.find(ticket.ticketId);
+  expect(ticketFound.ticketId).toBe(ticket.ticketId);
+  expect(ticketFound.eventId).toBe(ticket.eventId);
+  expect(ticketFound.email).toBe(ticket.email);
+  expect(ticketFound.price).toBe(ticket.price);
 });

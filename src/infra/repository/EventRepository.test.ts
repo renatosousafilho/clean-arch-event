@@ -1,6 +1,6 @@
 import { Mysql2Adapter, PgPromiseAdapter } from '../database/DatabaseConnection';
 import Event from '../../domain/entities/Event';
-import EventRepository, { EventRepositoryMySQL, EventRepositoryPostgres } from './EventRepository';
+import EventRepository, { EventRepositoryMySQL, EventRepositoryPostgres, EventRepositoryMemory } from './EventRepository';
 
 test('EventRepositoryPostgres should find an event', async () => {
   const databaseConnection = new PgPromiseAdapter();
@@ -26,4 +26,34 @@ test('EventRepositoryMySQL should find an event', async () => {
   expect(eventFound.price).toBe(event.price);
   await databaseConnection.query('DELETE FROM branas.events WHERE event_id = ?', [event.eventId]);
   await databaseConnection.close();
+});
+
+test('EventRepositoryMemory should find an ticket', async () => {
+  // Arrange
+  const eventRepository = EventRepositoryMemory.getInstance();
+  const event = Event.create('Concert', 100);
+  await eventRepository.save(event);
+  
+  // Act
+  const eventFound = await eventRepository.find(event.eventId);
+
+  // Assert
+  expect(eventFound.eventId).toBe(event.eventId);
+  expect(eventFound.description).toBe(event.description);
+  expect(eventFound.price).toBe(event.price);
+});
+
+test('EventRepositoryMemory should insert an ticket', async () => {
+  // Arrange
+  const eventRepository = EventRepositoryMemory.getInstance();
+  const event = Event.create('Concert', 100);
+  
+  // Act
+  await eventRepository.save(event);
+  
+  // Assert
+  const eventFound = await eventRepository.find(event.eventId);
+  expect(eventFound.eventId).toBe(event.eventId);
+  expect(eventFound.description).toBe(event.description);
+  expect(eventFound.price).toBe(event.price);
 });

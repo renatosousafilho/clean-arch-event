@@ -6,6 +6,7 @@ import Ticket from '../entities/Ticket';
 export default class PurchaseTicket {
   private ticketRepository: TicketRepository;
   private eventRepository: EventRepository;
+  
   constructor(repositoryFactory: RepositoryFactory) {
     this.ticketRepository = repositoryFactory.createTicketRepository();
     this.eventRepository = repositoryFactory.createEventRepository();
@@ -13,7 +14,6 @@ export default class PurchaseTicket {
 
   async execute(input: Input): Promise<Output> {
     const event = await this.eventRepository.find(input.eventId)
-    // console.log(event);
     const ticket = Ticket.create(event.eventId, input.email, event.price)
     await this.ticketRepository.save(ticket)
     return {

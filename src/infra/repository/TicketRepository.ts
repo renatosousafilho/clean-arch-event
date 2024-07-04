@@ -6,6 +6,32 @@ export default interface TicketRepository {
   find(ticketId: string): Promise<Ticket>;
 }
 
+export class TicketRepositoryMemory implements TicketRepository {
+  private static instance: TicketRepositoryMemory;
+  private tickets: Ticket[] = [];
+
+  private constructor() {}
+
+  static getInstance(): TicketRepositoryMemory {
+    if (!TicketRepositoryMemory.instance) {
+      TicketRepositoryMemory.instance = new TicketRepositoryMemory();
+    }
+    return TicketRepositoryMemory.instance;
+  }
+
+  async save(ticket: Ticket): Promise<void> {
+    this.tickets.push(ticket);
+  }
+
+  async find(ticketId: string): Promise<Ticket> {
+    const ticket = this.tickets.find(ticket => ticket.ticketId === ticketId);
+    if (!ticket) {
+      throw new Error('Ticket not found');
+    }
+    return ticket;
+  }
+}
+
 export abstract class TicketRepositoryDatabase implements TicketRepository {
   constructor(protected databaseConnection: DatabaseConnection) {}
   
