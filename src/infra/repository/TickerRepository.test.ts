@@ -1,7 +1,6 @@
 import { Mysql2Adapter, PgPromiseAdapter } from '../database/DatabaseConnection';
 import Event from '../../domain/entities/Event';
-import EventRepository, { EventRepositoryMySQL, EventRepositoryPostgres } from './EventRepository';
-import TicketRepository, { TicketRepositoryMemory, TicketRepositoryMySQL, TicketRepositoryPostgres } from './TicketRepository';
+import { TicketRepositoryMemory, TicketRepositoryMySQL, TicketRepositoryPostgres } from './TicketRepository';
 import Ticket from '../../domain/entities/Ticket';
 
 test('TickerRepositoryPostgres should insert an ticket', async () => {
