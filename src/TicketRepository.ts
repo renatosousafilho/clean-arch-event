@@ -1,4 +1,4 @@
-import Ticket from './Ticket';
+import Ticket from './domain/entities/Ticket';
 import DatabaseConnection from './DatabaseConnection';
 
 export default interface TicketRepository {

@@ -1,4 +1,4 @@
-import Event from './Event';
+import Event from './domain/entities/Event';
 import DatabaseConnection from './DatabaseConnection';
 
 export default interface EventRepository {
