@@ -1,5 +1,5 @@
-import GetTicket from '../src/GetTicket';
-import PurchaseTicket from '../src/PurchaseTicket'
+import GetTicket from '../src/domain/usecase/GetTicket';
+import PurchaseTicket from '../src/domain/usecase/PurchaseTicket';
 import DatabaseConnection, { PgPromiseAdapter } from '../src/DatabaseConnection';
 import RepositoryFactory, { RepositoryFactoryDatabase } from '../src/RepositoryFactory';
 

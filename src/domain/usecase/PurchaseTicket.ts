@@ -1,7 +1,7 @@
-import TicketRepository from './TicketRepository';
-import EventRepository from './EventRepository';
-import RepositoryFactory from './RepositoryFactory';
-import Ticket from './domain/entities/Ticket';
+import TicketRepository from '../../TicketRepository';
+import EventRepository from '../../EventRepository';
+import RepositoryFactory from '../../RepositoryFactory';
+import Ticket from '../entities/Ticket';
 
 export default class PurchaseTicket {
   private ticketRepository: TicketRepository;
