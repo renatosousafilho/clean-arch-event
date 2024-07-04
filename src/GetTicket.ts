@@ -1,8 +1,9 @@
-import pgp from 'pg-promise'
 import TicketRepository from './TicketRepository'
 
 export default class GetTicket {
-  private ticketRepository: TicketRepository = new TicketRepository()
+  constructor(
+    private ticketRepository: TicketRepository
+  ) { }
 
   async execute(ticketId: string): Promise<Output> {
     const ticket = await this.ticketRepository.find(ticketId)

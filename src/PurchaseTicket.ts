@@ -1,11 +1,12 @@
-import crypto from 'crypto';
 import TicketRepository from './TicketRepository';
 import EventRepository from './EventRepository';
 import Ticket from './Ticket';
 
 export default class PurchaseTicket {
-  private ticketRepository: TicketRepository = new TicketRepository();
-  private eventRepository: EventRepository = new EventRepository();
+  constructor(
+    private ticketRepository: TicketRepository,
+    private eventRepository: EventRepository,
+  ) { }
 
   async execute(input: Input): Promise<Output> {
     const event = await this.eventRepository.find(input.eventId)
