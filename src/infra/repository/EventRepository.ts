@@ -1,5 +1,6 @@
 import Event from '../../domain/entities/Event';
 import DatabaseConnection from '../database/DatabaseConnection';
+import { MongoClient, Collection } from 'mongodb';
 
 export default interface EventRepository {
   find(eventId: string): Promise<Event>;
@@ -64,5 +65,28 @@ export class EventRepositoryMySQL extends EventRepositoryDatabase {
     const sql = 'INSERT INTO branas.events (event_id, description, price) VALUES (?, ?, ?)';
     const params = [event.eventId, event.description, event.price];
     await this.databaseConnection.query(sql, params);
+  }
+}
+
+export class EventRepositoryMongoDB implements EventRepository {
+  private collection: Collection;
+
+  constructor(private client: MongoClient) {
+    this.collection = this.client.db('branas').collection('events');
+    this.client.on('error', () => {
+      this.client.close();
+    });
+  }
+
+  async find(eventId: string): Promise<Event> {
+    const event = await this.collection.findOne({ eventId });
+    if (!event) {
+      throw new Error('Event not found');
+    }
+    return new Event(event.eventId, event.description, event.price);
+  }
+
+  async save(event: Event): Promise<void> {
+    await this.collection.insertOne({ eventId: event.eventId, description: event.description, price: event.price });
   }
 }

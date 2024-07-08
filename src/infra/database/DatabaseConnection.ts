@@ -1,5 +1,6 @@
 import pgp from 'pg-promise'
 import mysql2 from 'mysql2/promise'
+import { MongoClient } from 'mongodb';
 
 export default interface DatabaseConnection {
   query(statement: string, params: any[]): Promise<any>;
