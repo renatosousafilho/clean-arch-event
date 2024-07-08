@@ -1,16 +1,16 @@
--- Active: 1720099914221@@127.0.0.1@5432@postgres
-drop schema branas cascade;
-create SCHEMA branas;
+-- Active: 1715796784859@@127.0.0.1@3306
+drop database if exists branas;
+create database if not exists branas;
 
 create table branas.events (
-  event_id uuid primary key,
+  event_id varchar(255) primary key,
   description varchar(255) not null,
-  price numeric(10,2) not null
+  price decimal not null
 );
 
 create table branas.tickets (
-  ticket_id uuid primary key,
-  event_id uuid not null,
+  ticket_id varchar(255) primary key,
+  event_id varchar(255) not null,
   email varchar(255) not null,
   price numeric(10,2) not null
 );
