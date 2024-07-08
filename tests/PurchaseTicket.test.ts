@@ -1,10 +1,12 @@
-import GetTicket from '../src/GetTicket';
-import PurchaseTicket from '../src/PurchaseTicket'
-import DatabaseConnection, { PgPromiseAdapter } from '../src/DatabaseConnection';
-import RepositoryFactory, { RepositoryFactoryDatabase } from '../src/RepositoryFactory';
+import GetTicket from '../src/domain/usecase/GetTicket';
+import PurchaseTicket from '../src/domain/usecase/PurchaseTicket';
+import DatabaseConnection, { Mysql2Adapter, PgPromiseAdapter } from '../src/infra/database/DatabaseConnection';
+import RepositoryFactory, { RepositoryFactoryDatabase } from '../src/infra/repository/RepositoryFactory';
 
 test('Deve comprar um ingresso', async () => {
-  const databaseConnection: DatabaseConnection = new PgPromiseAdapter();
+  let databaseConnection: DatabaseConnection;
+  databaseConnection = new PgPromiseAdapter();
+  // databaseConnection = new Mysql2Adapter();
   const repositoryFactory: RepositoryFactory = new RepositoryFactoryDatabase(databaseConnection);
   const purchaseTicket = new PurchaseTicket(repositoryFactory);
   const getTicket = new GetTicket(repositoryFactory);
